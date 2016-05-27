@@ -1,41 +1,10 @@
-import React from 'react'
-import { render } from 'react-dom'
-import { Router as ReactRouter, browserHistory } from 'react-router'
+import { render } from 'preact'
 import { Provider } from 'react-redux'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { combine } from './reducer'
 
 export default function (stores, baseComponent) {
-  const store = combine({
-    ...stores,
-    routing: routerReducer,
-  })
+  const store = combine({ ...stores })
+  const provider = <Provider store={ store }>{ baseComponent }</Provider>
 
-  const syncedHistory = syncHistoryWithStore(browserHistory, store)
-  const base = baseComponent.props._isRouteWrapper
-    ? <ReactRouter history={ syncedHistory }>{ baseComponent }</ReactRouter>
-    : baseComponent
-
-  let child = base
-  if (process.env.NODE_ENV !== 'production') {
-    if (window.devToolsExtension) {
-      console.warn('Jumpsuit doesn\'t support the Redux Dev Tools browser extension!')
-    }
-
-    const Hsr = require('./hsr').default
-    const DevTools = require('./devtools').default
-
-    child = <div>{ base }<DevTools /><Hsr /></div>
-  }
-
-  render(
-    <Provider store={ store }>{ child }</Provider>,
-    document.getElementById('app')
-  )
+  render(provider, document.getElementById('app'))
 }
-
-export const Router = React.createClass({
-  propTypes: { children: React.PropTypes.object },
-  getDefaultProps: () => ({ _isRouteWrapper: true }),
-  render: () => <div>{ this.props.children }</div>,
-})

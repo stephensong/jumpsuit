@@ -1,34 +1,18 @@
-import {
-  Route,
-  IndexRoute,
-  Redirect,
-  IndexRedirect,
-  Link,
-  IndexLink,
-} from 'react-router'
-
+import { h } from 'preact'
+import { Link } from 'preact-router'
+import ReactCompatability from 'preact-compat'
+import { Router } from './router'
 import Component from './component'
-import Render, { Router } from './render'
 import State from './state'
-import Goto from './routing'
-import { Middleware } from './reducer'
+import Render from './render'
+
+window.h = h
+window.React = ReactCompatability
 
 module.exports = {
-  /* Core */
-  Component,
-  Router,
-  Render,
-  State,
-  Goto,
-
-  /* React Router */
-  Route,
-  IndexRoute,
-  Redirect,
-  IndexRedirect,
   Link,
-  IndexLink,
-
-  /* Redux */
-  Middleware,
+  Router,
+  Component,
+  State,
+  Render,
 }
